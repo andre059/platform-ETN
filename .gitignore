@@ -1,0 +1,4 @@
+ /db.postgresql
+ /.idea
+ /venv
+ /.env
