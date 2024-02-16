@@ -3,10 +3,12 @@ psycopg2-binary
 psycopg2~=2.9.9
 pillow~=10.2.0
 python-decouple
-pip~=23.2.1
+pip~=24.0
 utils~=1.0.2
 redis~=5.0.1
 pytz~=2024.1
 asgiref~=3.7.2
 sqlparse~=0.4.4
 djangorestframework~=3.14.0
+djangorestframework_simplejwt
+django-filter
