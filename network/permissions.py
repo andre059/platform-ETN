@@ -1,13 +1,25 @@
-from rest_framework.exceptions import PermissionDenied
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 
 
 class IsThereDebtSupplier(BasePermission):
     """Проверяет, задолженность перед поставщиком"""
 
     def has_permission(self, request, view):
-        if not request.product.debt:  # Проверяем, задолженный ли продукт
+        supplier = request.data.get('supplier')  # Получаем поставщика из запроса
+        if supplier.get('debt_to_supplier') > 0:  # Проверяем задолженность перед поставщиком
             return False
-        elif request.product.debt:
+        return True
+
+
+class SupplierPermission(BasePermission):
+    """
+    Разрешение для представлений CRUD поставщика.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in ['POST', 'GET']:
             return True
-        raise PermissionDenied("Продукт не задолженный")
+        return IsAuthenticated().has_permission(request, view)
+
+    def has_object_permission(self, request, view, obj):
+        return IsAuthenticated().has_permission(request, view)

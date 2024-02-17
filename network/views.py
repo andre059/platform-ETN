@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics
 
 from network.models import Supplier
-from network.permissions import IsThereDebtSupplier
+from network.permissions import IsThereDebtSupplier, SupplierPermission
 from network.serliazers import SupplierSerializer
 from users.permissions import UserIsActive
 
@@ -36,7 +36,7 @@ class SupplierUpdateAPIView(generics.RetrieveAPIView):
 
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
-    permission_classes = [IsThereDebtSupplier, UserIsActive]
+    permission_classes = [IsThereDebtSupplier, UserIsActive, SupplierPermission]
 
 
 class SupplierDestroyAPIView(generics.RetrieveAPIView):
@@ -44,4 +44,4 @@ class SupplierDestroyAPIView(generics.RetrieveAPIView):
 
     serializer_class = SupplierSerializer
     queryset = Supplier.objects.all()
-    permission_classes = [IsThereDebtSupplier, UserIsActive]
+    permission_classes = [IsThereDebtSupplier, UserIsActive, SupplierPermission]
