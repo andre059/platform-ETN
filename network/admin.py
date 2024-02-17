@@ -5,7 +5,10 @@ from network.models import Supplier, Product, NetworkElement
 
 @admin.action(description='Очистить задолженность')
 def clear_debt(modeladmin, request, queryset):
-    queryset.update(debt=0)
+    for product in queryset:
+        product.debt = False  # Снимаем флаг
+        product.debt_to_supplier = 0  # Обнуляем задолженность
+        product.save()  # Сохраняем изменения
     clear_debt.short_description = 'Очистить задолженность перед поставщиком'
 
 
@@ -24,6 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(NetworkElement)
 class NetworkElementAdmin(admin.ModelAdmin):
-    list_display = ('name', 'contact_email', 'country', 'city', 'street', 'house_number', 'level', 'element_type', 'debt')
+    list_display = (
+        'name', 'contact_email', 'country', 'city', 'street', 'house_number', 'level', 'element_type', 'debt')
     list_filter = ['city']
     actions = [clear_debt]
