@@ -8,7 +8,7 @@ app_name = UsersConfig.name
 
 urlpatterns = [
     # generics
-    path('user/create', UserCreateAPIView.as_view(), name='user-create'),
+    path('user/create/', UserCreateAPIView.as_view(), name='user-create'),
     path('user/<int:pk>/', UserRetrieveAPIView.as_view(), name='user-retrieve'),
     path('user/update/<int:pk>/', UserUpdateAPIView.as_view(), name='user-update'),
     path('user/delete/<int:pk>/', UserDestroyAPIView.as_view(), name='user-delete'),

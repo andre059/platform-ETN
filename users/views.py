@@ -1,7 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics, status
+from rest_framework.response import Response
+
 
 from users.models import User
 from users.permissions import IsVerifiedUser
@@ -15,9 +15,21 @@ def welcome(request):
 class UserCreateAPIView(generics.CreateAPIView):
     """создание сущности"""
 
+    """Создание пользователя"""
     queryset = User.objects.all()
     serializer_class = UserSerializers
-    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+        user.set_password(serializer.validated_data['password'])
+        user.save()
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
@@ -25,7 +37,6 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializers
-    permission_classes = [IsVerifiedUser]
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
@@ -41,3 +52,4 @@ class UserDestroyAPIView(generics.DestroyAPIView):
 
     queryset = User.objects.all()
     permission_classes = [IsVerifiedUser]
+
